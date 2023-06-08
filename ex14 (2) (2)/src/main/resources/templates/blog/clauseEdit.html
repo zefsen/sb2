@@ -1,0 +1,40 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout}">
+    <div layout:fragment="content">
+<form role="form" th:object=${fileListVO} th:action="@{editSave}" method="post" enctype="multipart/form-data">
+    <div class="section form">
+       <table>
+        <colgroup>
+            <col style="width:15%"/>
+            <col style="width:0%"/>
+        </colgroup>
+        <tbody>
+            <tr> 
+                <td>
+                    <input type="hidden" th:field="*{seq}" />
+                    <input type="hidden" th:field="*{isEdit}"/>
+                   <div class="input-form-box"> <input type="text" th:field="*{title}" placeholder="제목" required class="form-control"></div>
+                </td>
+            </tr>
+            
+            <tr> 
+                <td >
+                   <div class="input-form-box1"> <textarea colspan="4" id="story" th:field="*{content}" placeholder="내용을 적어주세요." rows="5" cols="200" required class="form-control"></textarea></div>
+                </td>
+            </tr>
+            <tr> 
+                <td>
+                    <input type="file" id="file" name="files" multiple />
+                    <span style="color: #00a2be" th:text="'*새로 파일첨부시 기존 파일은 삭제됩니다.(첨부된 파일 : '+ ${fileLen} + '개)'"></span>
+                </td>
+            </tr>
+        </tbody>
+       </table>
+       <div class="button-login-box">
+            <button type="submit" class="btn btn-primary btn-xs">내용수정</button>
+       </div>
+    </div>
+
+</form>
+</div>

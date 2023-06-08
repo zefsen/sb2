@@ -1,0 +1,23 @@
+<form role="form" action="update" method="post">
+    <div class="section form">
+
+			<tr th:if=${session.id==item.mbId} th:each="item : ${items}">
+                <div class="input-form-box"><a><span>아이디</span></a>
+                    <input type="text" name="id" placeholder="id" th:value=${item.mbId} th:readonly="true" class="form-control"/></div>
+                <div class="input-form-box"><a><span>패스워드</span></a>
+                    <input type="text" name="pw" placeholder="password"  th:value=${item.mbPw} required class="form-control"/></div>
+                            <td>
+                    <input type="hidden" name="admin" value="admin" required/>
+                </td>
+                <td>
+                    <input type="hidden" name="seq" th:value="${item.mbSeq}" required/>
+                </td>
+                <td>
+                    <input type="hidden" name="level" th:value="${item.mbLevel}" required/>
+            </tr>
+       <div class="button-login-box">
+            <button type="submit" class="btn btn-primary btn-xs">정보 수정</button>
+       </div>
+    </div>
+
+</form>

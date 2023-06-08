@@ -1,0 +1,135 @@
+<head><script  src="https://code.jquery.com/jquery-3.4.1.js"></script></head>
+ <section class="py-5">
+               
+                <div class="text-end mb-5 mb-xl-0">
+                        <a class="text-decoration-none" th:href="@{clause}">
+								글 작성
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                     <div class="containers px-10">
+                            <th:block th:if="${items}"> 
+					<tr th:each="item : ${items}">
+			                    <div class="row gx-5">                
+                        <div class="col-lg-13 mb-5">
+                            <div class="card h-100 shadow border-0">
+                            <th:block th:if="${detail}">
+                            <ul th:if="${files}"  th:each="file : ${files}">
+                                <img class="card-img-top" th:src="@{${file.upNewFileName}}" alt="..."/>
+                                </ul>
+                                </th:block>
+                                <div class="card-body p-4">
+                                    <div class="badge bg-primary bg-gradient rounded-pill mb-2">New</div>
+                                    <a class="text-decoration-none link-dark stretched-link" th:href="@{/detail(bdSeq = ${item.bdSeq})}"><div class="h5 card-title mb-3"><a th:text="${item.bdTitle}"></a></div></a>
+                                    <p class="card-text mb-0"><a th:text="${item.bdContent}"></a></p>
+                                </div>
+                                <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                                    <div class="d-flex align-items-end justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <img class="rounded-circle me-3" src="https://dummyimage.com/40x40/ced4da/6c757d" alt="..." />
+                                            <div class="small">
+                                                <div class="fw-bold"><a th:text="${item.mbId}"></a></div>
+                                                <div class="text-muted"><a th:text="${item.bdCreateAt}"></a>에 작성됨.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>                  
+                            </div>
+                            </div>
+                        </div>
+                       
+                     <th:block th:if="${detail}">   
+        <section class="py-5">    
+                <div class="container px-5 my-5">
+                    <div class="row gx-5">
+                        <div class="col-lg-3">
+                            <div class="d-flex align-items-center mt-lg-5 mb-4">
+                                <img class="img-fluid rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="" />
+                                <div class="ms-3">
+                                    <div class="fw-bold"><a th:text="${detail.mbId}"></a></div>
+                                    <div id="seq" class="text-muted"><a th:text="${detail.bdSeq}"></a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <!-- Post content-->
+                            <article>
+                                <!-- Post header-->
+                                <header class="mb-4">
+                                    <!-- Post title-->
+                                    <h1 class="fw-bolder mb-1"><a th:text="${detail.bdTitle}"></a></h1>
+                                    <!-- Post meta content-->
+                                    <div class="text-muted fst-italic mb-2"><a th:text="${detail.bdCreateAt}"></a>작성됨 <a th:text="${detail.bdUpdateAt}"></a>수정됨</div>      
+                                </header>
+                                <ul th:if="${files}"  th:each="file : ${files}" style="display: inline-block;margin-bottom: 5px;">
+                <li> <img id="imgId" th:src="@{${file.upNewFileName}}" alt="첨부이미지" height="600" /></li>
+            </ul>
+                                <!-- Post content-->
+                                <section class="mb-5">
+                                    <p class="fs-5 mb-4"><a th:text="${detail.bdContent}"></a></p>
+                                </section>
+                                <div style="padding: 30px 0; text-align:right;">
+		        <a th:href="@{/edit(bdSeq = ${detail.bdSeq})}"><button>수정</button></a>
+            <a th:href="@{/remove(bdSeq = ${detail.bdSeq})}"><button>삭제</button></a>
+            <a th:href="@{blog-home}"><button style="background-color: #00a2be; color: white; margin-left: 20px">목록으로</button></a>
+        </div>
+                            </article>
+                            <!-- Comments section-->
+                            <section>
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <!-- Comment form-->
+                                        <form class="mb-4"><textarea class="form-control" id="content" name="content" onkeyup="countingLength(this);" cols="90" rows="4" placeholder="댓글을 입력해 주세요."></textarea></form>
+										                <span><button type="button" class="btns" onclick="saveComment();">등 록</button> <i id="counter">0/300자</i></span>
+										
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+    </th:block>
+            </section>
+            <script>
+            function countingLength(content) {
+                if (content.value.length > 300) {
+                    alert('댓글을 300자 이하로 입력해 주세요.');
+                    content.value = content.value.substring(0, 300);
+                    content.focus();
+                }
+                document.getElementById('counter').innerText = content.value.length + '/300자';
+            }
+
+
+            // 댓글 저장
+            function saveComment() {
+
+                const content = document.getElementById('content');
+
+                var a = document.getElementById('seq');
+                const postId = a.textContent;
+                
+                const params = {
+                    postId : postId,
+                    content : content.value,
+                    writer : '홍길동'
+                }
+
+                $.ajax({
+                    url : `/posts/${postId}/comments`,
+                    type : 'post',
+                    contentType : 'application/json; charset=utf-8',
+                    dataType : 'json',
+                    data : JSON.stringify(params),
+                    async : false,
+                    success : function (response) {
+                        console.log(response);
+                    },
+                    error : function (request, status, error) {
+                        console.log(error)
+                    }
+                })
+            }
+            </script>
